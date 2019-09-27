@@ -18,62 +18,18 @@ const GivethDonators = ({ donationData }) => {
     let links = [];
     let runningTotal = 0;
 
-    // donationCreateGiverData.map(donation => {
-    //     if (!includedGiverIds.includes(donation.giver)) {
-    //         nodes.push({
-    //             id: donation.giver,
-    //             isGiver: true,
-    //             amount: donation.amount / 10 ** 18
-    //         });
-    //         includedGiverIds.push(donation.giver);
-    //     } else {
-    //         nodes.forEach(node => {
-    //             if (node.id === donation.giver) {
-    //                 node.amount += donation.amount / 10 ** 18;
-    //                 if (node.id == '1655') {
-    //                     console.log('1655 amount', node.amount);
-    //                 }
-    //             }
-    //         });
-    //     }
-    //     if (!includedGiverIds.includes(donation.receiverId)) {
-    //         nodes.push({
-    //             id: donation.receiverId,
-    //             isGiver: false,
-    //             amount: donation.amount / 10 ** 18
-    //         });
-    //         includedGiverIds.push(donation.receiverId);
-    //     } else {
-    //         nodes.forEach(node => {
-    //             if (node.id === donation.receiverId) {
-    //                 node.amount += donation.amount / 10 ** 18;
-    //             }
-    //         });
-    //     }
-    //     links.push({
-    //         source: donation.giver,
-    //         target: donation.receiverId,
-    //         amount: donation.amount
-    //     });
-    //     runningTotal += donation.amount / 10 ** 18;
-    // })
-
     donationData.map(donation => {
       if (!includedGiverIds.includes(donation.giverId)) {
         nodes.push({
           id: donation.giverId,
           isGiver: true,
-          amount: donation.amount / (10 ** 18)
+          amount: convertToEth(donation.amount)
         });
         includedGiverIds.push(donation.giverId);
       } else {
         nodes.forEach(node => {
           if (node.id === donation.giverId) {
-            node.amount = donation.amount / (10 ** 18);
-            node.tokenName = getTokenName(donation.token);
-            if (node.id === '1383') {
-              console.log('1383 amount', node.amount, node.tokenName, 'to', donation.receiverId);
-            }
+            node.amount = convertToEth(donation.amount);
           }
         });
       }
@@ -81,22 +37,23 @@ const GivethDonators = ({ donationData }) => {
         nodes.push({
           id: donation.receiverId,
           isGiver: false,
-          amount: donation.amount / (10 ** 18)
+          amount: convertToEth(donation.amount)
         });
         includedGiverIds.push(donation.receiverId);
       } else {
         nodes.forEach(node => {
           if (node.id === donation.receiverId) {
-            node.amount = donation.amount / (10 ** 18);
+            node.amount = convertToEth(donation.amount);
           }
         });
       }
       links.push({
         source: donation.giverId,
         target: donation.receiverId,
-        amount: donation.amount
-      });
-      runningTotal += donation.amount / (10 ** 18);
+        amount:donation.amount / (10 ** 18),
+        tokenName: getTokenName(donation.token)
+    });
+      runningTotal += convertToEth(donation.amount);
       return donation;
     });
 
@@ -104,12 +61,14 @@ const GivethDonators = ({ donationData }) => {
     console.log(runningTotal);
   };
 
+  const convertToEth = (amount) => {
+    return amount / (10 ** 18)
+  }
+
   const drawChart = (nodes, links, donationTotal) => {
     const height = window.innerHeight;
     const width = window.innerWidth;
 
-///    console.log(nodes);
-///    console.log(links);
 
     const svg = d3
       .select('#d3-container')
@@ -179,6 +138,11 @@ const GivethDonators = ({ donationData }) => {
       .append('svg:path')
       .attr('d', 'M0,-5L10,0L0,5');
 
+      // Define the div for the tooltip
+      var div = d3.select("body").append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
+
     //draw lines for the links
     let link = containingG
       .append('g')
@@ -193,7 +157,20 @@ const GivethDonators = ({ donationData }) => {
         return strokeWidth > 2 ? strokeWidth : 2;
       })
       .attr('fill', 'blue')
-      .attr('marker-end', 'url(#end)');
+       .on("mouseover", function(d) {
+              div.transition()
+                  .duration(200)
+                  .style("opacity", .9);
+              div.html(d.amount + " " + d.tokenName)
+                  .style("left", (d3.event.pageX) + "px")
+                  .style("top", (d3.event.pageY - 28) + "px");
+          })
+          .on("mouseout", function(d) {
+              div.transition()
+                  .duration(500)
+                  .style("opacity", 0);
+          })
+        .attr('marker-end', 'url(#end)');
 
     let linkText = containingG
       .append('g')
@@ -237,7 +214,7 @@ const GivethDonators = ({ donationData }) => {
           20 + 0 * proportion * 100
         );
 */
-        return 20 + 100 * proportion;
+        return 20 + 3000 * proportion;
       })
       .attr('fill', d => (d.isGiver ? 'purple' : 'teal'));
 

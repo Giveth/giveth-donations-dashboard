@@ -129,7 +129,7 @@ const GivethDonators = ({ donationData }) => {
       .append('svg:marker') // This section adds in the arrows
       .attr('id', String)
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 50)
+      .attr('refX', 20)
       .attr('refY', 0)
       .attr('markerWidth', 50)
       .attr('markerHeight', 15)
@@ -152,7 +152,7 @@ const GivethDonators = ({ donationData }) => {
       .enter()
       .append('line')
       .attr('stroke-width', function(d) {
-        const strokeWidth = (d.amount / (10 ** 18) / donationTotal) * 100;
+        const strokeWidth = (d.amount / donationTotal) * 250;
 
         return strokeWidth > 2 ? strokeWidth : 2;
       })

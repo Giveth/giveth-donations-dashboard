@@ -70,15 +70,10 @@ const GivethDonators = ({ donationData }) => {
       } else {
         nodes.forEach(node => {
           if (node.id === donation.giverId) {
-            node.amount = donation.amount / 10 ** 18;
+            node.amount = donation.amount / (10 ** 18);
+            node.tokenName = getTokenName(donation.token);
             if (node.id === '1383') {
-              console.log(
-                '1383 amount',
-                node.amount,
-                getTokenName(donation.token),
-                'to',
-                donation.receiverId
-              );
+              console.log('1383 amount', node.amount, node.tokenName, 'to', donation.receiverId);
             }
           }
         });

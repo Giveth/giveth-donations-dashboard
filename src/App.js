@@ -11,11 +11,19 @@ import {
   DialogTitle,
   Button
 } from '@material-ui/core';
-import './App.css';
+import styled from 'styled-components';
 import Header from './components/Header';
 import Error from './components/Error';
-import Filter from './components/Filter';
+// import Filter from './components/Filter';
 import GivethDonators from './components/Visualisation/GivethDonators';
+
+const Body = styled.div`
+  background: rgba(60, 49, 62, 0.1);
+`;
+const VisualisationContainer = styled.div`
+  margin: 0px;
+  padding: 0px;
+`;
 
 if (!process.env.REACT_APP_GRAPHQL_ENDPOINT) {
   throw new Error(
@@ -63,42 +71,34 @@ class App extends Component {
   };
 
   render() {
-    const { withImage, withName, orderBy, showHelpDialog } = this.state;
+    const { showHelpDialog } = this.state;
 
     return (
       <ApolloProvider client={client}>
-        <div className="App">
-          <Grid container direction="column">
+        <Body className="App">
+          <VisualisationContainer>
             <Header onHelp={this.toggleHelpDialog} />
-
-            <Grid item>
-              <Grid container>
-                <Query
-                  query={DONATION_QUERY}
-                  // variables={{
-                  //   where: {
-                  //     ...(withImage ? { imageUrl_starts_with: 'http' } : {}),
-                  //     ...(withName ? { displayName_not: '' } : {}),
-                  //   },
-                  //   orderBy: orderBy,
-                  // }}
-                >
-                  {({ data, error, loading }) => {
-                    return loading ? (
-                      <LinearProgress
-                        variant="query"
-                        style={{ width: '100%' }}
-                      />
-                    ) : error ? (
-                      <Error error={error} />
-                    ) : (
-                      <GivethDonators donationData={data.donates} />
-                    );
-                  }}
-                </Query>
-              </Grid>
-            </Grid>
-          </Grid>
+            <Query
+              query={DONATION_QUERY}
+              // variables={{
+              //   where: {
+              //     ...(withImage ? { imageUrl_starts_with: 'http' } : {}),
+              //     ...(withName ? { displayName_not: '' } : {}),
+              //   },
+              //   orderBy: orderBy,
+              // }}
+            >
+              {({ data, error, loading }) => {
+                return loading ? (
+                  <LinearProgress variant="query" style={{ width: '100vw' }} />
+                ) : error ? (
+                  <Error error={error} />
+                ) : (
+                  <GivethDonators donationData={data.donates} />
+                );
+              }}
+            </Query>
+          </VisualisationContainer>
           <Dialog
             fullScreen={false}
             open={showHelpDialog}
@@ -127,7 +127,7 @@ class App extends Component {
               </Button>
             </DialogActions>
           </Dialog>
-        </div>
+        </Body>
       </ApolloProvider>
     );
   }

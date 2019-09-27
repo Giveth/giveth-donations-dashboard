@@ -2,8 +2,6 @@ import React from 'react';
 import * as d3 from 'd3';
 
 const GivethDonators = ({ donationData }) => {
-
-
   React.useEffect(() => {
     console.log('Mounted');
     createNodesAndLinks();
@@ -67,7 +65,7 @@ const GivethDonators = ({ donationData }) => {
         nodes.forEach(node => {
           if (node.id === donation.giverId) {
             node.amount += donation.amount / 10 ** 18;
-            if (node.id == '1655') {
+            if (node.id === '1655') {
               console.log('1655 amount', node.amount);
             }
           }
@@ -93,6 +91,7 @@ const GivethDonators = ({ donationData }) => {
         amount: donation.amount
       });
       runningTotal += donation.amount / 10 ** 18;
+      return donation;
     });
 
     drawChart(nodes, links, runningTotal);
@@ -102,7 +101,6 @@ const GivethDonators = ({ donationData }) => {
   const drawChart = (nodes, links, donationTotal) => {
     const height = window.innerHeight;
     const width = window.innerWidth;
-    const nodeRadius = 20;
 
     console.log(nodes);
     console.log(links);
@@ -136,8 +134,8 @@ const GivethDonators = ({ donationData }) => {
       .id(function(d) {
         return d.id;
       })
-      .distance(200)
-      .strength(0.7);
+      .distance(1000)
+      .strength(2.7);
 
     let chargeForce = d3
       .forceManyBody()
@@ -152,23 +150,23 @@ const GivethDonators = ({ donationData }) => {
       .force('collision', collisionForce)
       .force('charge', chargeForce);
 
-      // build the arrow.
-      svg
-          .append('svg:defs')
-          .selectAll('marker')
-          .data(['end']) // Different link/path types can be defined here
-          .enter()
-          .append('svg:marker') // This section adds in the arrows
-          .attr('id', String)
-          .attr('viewBox', '0 -5 10 10')
-          .attr('refX', 50)
-          .attr('refY', 0)
-          .attr('markerWidth', 50)
-          .attr('markerHeight', 15)
-          .attr('markerUnits', 'px')
-          .attr('orient', 'auto')
-          .append('svg:path')
-          .attr('d', 'M0,-5L10,0L0,5');
+    // build the arrow.
+    svg
+      .append('svg:defs')
+      .selectAll('marker')
+      .data(['end']) // Different link/path types can be defined here
+      .enter()
+      .append('svg:marker') // This section adds in the arrows
+      .attr('id', String)
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 50)
+      .attr('refY', 0)
+      .attr('markerWidth', 50)
+      .attr('markerHeight', 15)
+      .attr('markerUnits', 'px')
+      .attr('orient', 'auto')
+      .append('svg:path')
+      .attr('d', 'M0,-5L10,0L0,5');
 
     //draw lines for the links
     let link = containingG

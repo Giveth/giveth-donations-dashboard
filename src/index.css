@@ -6,6 +6,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 code {
@@ -14,7 +15,7 @@ code {
 }
 
 .links line {
-  stroke: #999;
+  stroke: rgba(0, 0, 0, 0.66);
   stroke-opacity: 0.6;
 }
 

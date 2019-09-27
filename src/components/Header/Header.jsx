@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grid, Typography, IconButton } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
-import styled from 'styled-components';
 
 const Header = ({ onHelp }) => (
   <Grid

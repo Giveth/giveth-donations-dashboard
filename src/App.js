@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ApolloClient, { gql, InMemoryCache } from 'apollo-boost';
 import { ApolloProvider, Query } from 'react-apollo';
 import {
-  Grid,
   LinearProgress,
   Dialog,
   DialogActions,

@@ -113,6 +113,23 @@ const GivethDonators = ({ donationData }) => {
 
     const containingG = svg.append('g');
 
+    const dragStart = d => {
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    };
+
+    const dragDrag = d => {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    };
+
+    const dragEnd = d => {
+      if (!d3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    };
+
     let drag_handler = d3
       .drag()
       .on('start', dragStart)
@@ -293,23 +310,6 @@ const GivethDonators = ({ donationData }) => {
           return (d.source.y + d.target.y) / 2;
         });
     }
-
-    const dragStart = d => {
-      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    };
-
-    const dragDrag = d => {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    };
-
-    const dragEnd = d => {
-      if (!d3.event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    };
 
     function zoom_actions() {
       containingG.attr('transform', d3.event.transform);

@@ -114,61 +114,60 @@ const GivethDonators = ({ donationData }) => {
       .force('collision', collisionForce)
       .force('charge', chargeForce);
 
-      // build the arrow.
-      svg
-          .append('svg:defs')
-          .selectAll('marker')
-          .data(['end']) // Different link/path types can be defined here
-          .enter()
-          .append('svg:marker') // This section adds in the arrows
-          .attr('id', String)
-          .attr('viewBox', '0 -5 10 10')
-          .attr('refX', 35)
-          .attr('refY', 0)
-          .attr('markerWidth', 50)
-          .attr('markerHeight', 15)
-          .attr('markerUnits', 'px')
-          .attr('orient', 'auto')
-          .append('svg:path')
-          .attr('d', 'M0,-5L10,0L0,5');
+    // build the arrow.
+    svg
+      .append('svg:defs')
+      .selectAll('marker')
+      .data(['end']) // Different link/path types can be defined here
+      .enter()
+      .append('svg:marker') // This section adds in the arrows
+      .attr('id', String)
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 35)
+      .attr('refY', 0)
+      .attr('markerWidth', 50)
+      .attr('markerHeight', 15)
+      .attr('markerUnits', 'px')
+      .attr('orient', 'auto')
+      .append('svg:path')
+      .attr('d', 'M0,-5L10,0L0,5');
 
+    //draw lines for the links
+    let link = containingG
+      .append('g')
+      .attr('class', 'links')
+      .selectAll('line')
+      .data(links)
+      .enter()
+      .append('line')
+      .attr('stroke-width', function(d) {
+        const strokeWidth = (d.amount / 10 ** 18 / donationTotal) * 100;
 
-      //draw lines for the links
-      let link = containingG
-          .append('g')
-          .attr('class', 'links')
-          .selectAll('line')
-          .data(links)
-          .enter()
-          .append('line')
-          .attr('stroke-width', function(d) {
-              const strokeWidth = (d.amount / 10 ** 18 / donationTotal) * 100;
+        return strokeWidth > 2 ? strokeWidth : 2;
+      })
+      .attr('fill', 'blue')
+      .attr('marker-end', 'url(#end)');
 
-              return strokeWidth > 2 ? strokeWidth : 2;
-          })
-          .attr('fill', 'blue')
-          .attr('marker-end', 'url(#end)');
+    let linkText = containingG
+      .append('g')
+      .selectAll('text')
+      .data(links)
+      .enter()
+      .append('text');
 
-      let linkText = containingG
-          .append('g')
-          .selectAll('text')
-          .data(links)
-          .enter()
-          .append('text');
-
-      let linkTextLabels = linkText
-          .attr('x', function(d) {
-              return (d.source.x + d.target.x) / 2;
-          })
-          .attr('y', function(d) {
-              return (d.source.y + d.target.y) / 2;
-          })
-          .text(function(d) {
-              return '';
-          })
-          .attr('font-family', 'sans-serif')
-          .attr('font-size', '10px');
-      // .attr("fill", "black");
+    let linkTextLabels = linkText
+      .attr('x', function(d) {
+        return (d.source.x + d.target.x) / 2;
+      })
+      .attr('y', function(d) {
+        return (d.source.y + d.target.y) / 2;
+      })
+      .text(function(d) {
+        return '';
+      })
+      .attr('font-family', 'sans-serif')
+      .attr('font-size', '10px');
+    // .attr("fill", "black");
     // build the arrow.
     let node = containingG
       .append('g')
@@ -192,7 +191,7 @@ const GivethDonators = ({ donationData }) => {
         );
         return 20 + 100 * proportion;
       })
-      .attr('fill', d => (d.isGiver ? 'green' : 'red'));
+      .attr('fill', d => (d.isGiver ? 'purple' : 'teal'));
 
     let nodeText = containingG
       .append('g')
@@ -214,9 +213,6 @@ const GivethDonators = ({ donationData }) => {
       .attr('font-family', 'sans-serif')
       .attr('font-size', '10px')
       .attr('fill', 'black');
-
-
-
 
     function tickActions() {
       //update circle positions each tick of the simulation

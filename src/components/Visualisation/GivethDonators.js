@@ -7,8 +7,9 @@ const GivethDonators = ({ donationData }) => {
     createNodesAndLinks();
   }, []);
 
-  const getTokenName = (tokenAddress) => {
-    if (tokenAddress === "0x0000000000000000000000000000000000000000") return 'ETH';
+  const getTokenName = tokenAddress => {
+    if (tokenAddress === '0x0000000000000000000000000000000000000000')
+      return 'ETH';
     else return 'DAI';
   };
 
@@ -63,7 +64,7 @@ const GivethDonators = ({ donationData }) => {
         nodes.push({
           id: donation.giverId,
           isGiver: true,
-          amount: donation.amount / (10 ** 18)
+          amount: donation.amount / 10 ** 18
         });
         includedGiverIds.push(donation.giverId);
       } else {
@@ -81,13 +82,13 @@ const GivethDonators = ({ donationData }) => {
         nodes.push({
           id: donation.receiverId,
           isGiver: false,
-          amount: donation.amount / (10 ** 18)
+          amount: donation.amount / 10 ** 18
         });
         includedGiverIds.push(donation.receiverId);
       } else {
         nodes.forEach(node => {
           if (node.id === donation.receiverId) {
-            node.amount = donation.amount / (10 ** 18);
+            node.amount = donation.amount / 10 ** 18;
           }
         });
       }
@@ -96,7 +97,7 @@ const GivethDonators = ({ donationData }) => {
         target: donation.receiverId,
         amount: donation.amount
       });
-      runningTotal += donation.amount / (10 ** 18);
+      runningTotal += donation.amount / 10 ** 18;
       return donation;
     });
 
@@ -108,8 +109,8 @@ const GivethDonators = ({ donationData }) => {
     const height = window.innerHeight;
     const width = window.innerWidth;
 
-///    console.log(nodes);
-///    console.log(links);
+    ///    console.log(nodes);
+    ///    console.log(links);
 
     const svg = d3
       .select('#d3-container')
@@ -118,6 +119,23 @@ const GivethDonators = ({ donationData }) => {
       .attr('height', height);
 
     const containingG = svg.append('g');
+
+    const dragStart = d => {
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    };
+
+    const dragDrag = d => {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    };
+
+    const dragEnd = d => {
+      if (!d3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    };
 
     let drag_handler = d3
       .drag()
@@ -183,7 +201,7 @@ const GivethDonators = ({ donationData }) => {
       .enter()
       .append('line')
       .attr('stroke-width', function(d) {
-        const strokeWidth = (d.amount / (10 ** 18) / donationTotal) * 100;
+        const strokeWidth = (d.amount / 10 ** 18 / donationTotal) * 100;
 
         return strokeWidth > 2 ? strokeWidth : 2;
       })
@@ -223,7 +241,7 @@ const GivethDonators = ({ donationData }) => {
         // console.log(d.amount / 10**18 )
         let proportion = d.amount / donationTotal;
         // if (proportion > 1) console.log("ERROR")
-/*        console.log(
+        /*        console.log(
           'Proportion',
           d.amount,
           proportion,
@@ -300,23 +318,6 @@ const GivethDonators = ({ donationData }) => {
           return (d.source.y + d.target.y) / 2;
         });
     }
-
-    const dragStart = d => {
-      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    };
-
-    const dragDrag = d => {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    };
-
-    const dragEnd = d => {
-      if (!d3.event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    };
 
     function zoom_actions() {
       containingG.attr('transform', d3.event.transform);

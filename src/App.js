@@ -26,9 +26,9 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 })
 
-const GRAVATARS_QUERY = gql`
+const DONATION_QUERY = gql`
   query givethdonations {
-    donates {
+    donates(first: 1000) {
       id
       giverId
       receiverId
@@ -91,7 +91,7 @@ class App extends Component {
             <Grid item>
               <Grid container>
                 <Query
-                  query={GRAVATARS_QUERY}
+                  query={DONATION_QUERY}
                   // variables={{
                   //   where: {
                   //     ...(withImage ? { imageUrl_starts_with: 'http' } : {}),
@@ -109,7 +109,7 @@ class App extends Component {
                     ) : error ? (
                       <Error error={error} />
                     ) : (
-                      <GivethDonators donationData={data.donates} />
+                      <GivethDonators donationData={data.donates}  />
                     )
                   }}
                 </Query>

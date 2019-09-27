@@ -2,13 +2,10 @@ import React from 'react';
 import * as d3 from 'd3';
 
 const GivethDonators = ({ donationData }) => {
-  // const [giverNodes, setGiverNodes] = React.useState([]);
-  // const [donationLinks, setDonationLinks] = React.useState([]);
-  // const [donationTotal, setDonationTotal] = React.useState(0);
+
 
   React.useEffect(() => {
     console.log('Mounted');
-    console.log(donationData);
     createNodesAndLinks();
   }, []);
 
@@ -17,6 +14,47 @@ const GivethDonators = ({ donationData }) => {
     let nodes = [];
     let links = [];
     let runningTotal = 0;
+
+    // donationCreateGiverData.map(donation => {
+    //     if (!includedGiverIds.includes(donation.giver)) {
+    //         nodes.push({
+    //             id: donation.giver,
+    //             isGiver: true,
+    //             amount: donation.amount / 10 ** 18
+    //         });
+    //         includedGiverIds.push(donation.giver);
+    //     } else {
+    //         nodes.forEach(node => {
+    //             if (node.id === donation.giver) {
+    //                 node.amount += donation.amount / 10 ** 18;
+    //                 if (node.id == '1655') {
+    //                     console.log('1655 amount', node.amount);
+    //                 }
+    //             }
+    //         });
+    //     }
+    //     if (!includedGiverIds.includes(donation.receiverId)) {
+    //         nodes.push({
+    //             id: donation.receiverId,
+    //             isGiver: false,
+    //             amount: donation.amount / 10 ** 18
+    //         });
+    //         includedGiverIds.push(donation.receiverId);
+    //     } else {
+    //         nodes.forEach(node => {
+    //             if (node.id === donation.receiverId) {
+    //                 node.amount += donation.amount / 10 ** 18;
+    //             }
+    //         });
+    //     }
+    //     links.push({
+    //         source: donation.giver,
+    //         target: donation.receiverId,
+    //         amount: donation.amount
+    //     });
+    //     runningTotal += donation.amount / 10 ** 18;
+    // })
+
     donationData.map(donation => {
       if (!includedGiverIds.includes(donation.giverId)) {
         nodes.push({
@@ -98,13 +136,13 @@ const GivethDonators = ({ donationData }) => {
       .id(function(d) {
         return d.id;
       })
-      .distance(60)
+      .distance(200)
       .strength(0.7);
 
     let chargeForce = d3
       .forceManyBody()
       .strength(-200)
-      .distanceMax(400);
+      .distanceMax(200);
 
     let collisionForce = d3.forceCollide(50);
 
@@ -114,23 +152,23 @@ const GivethDonators = ({ donationData }) => {
       .force('collision', collisionForce)
       .force('charge', chargeForce);
 
-    // build the arrow.
-    svg
-      .append('svg:defs')
-      .selectAll('marker')
-      .data(['end']) // Different link/path types can be defined here
-      .enter()
-      .append('svg:marker') // This section adds in the arrows
-      .attr('id', String)
-      .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 35)
-      .attr('refY', 0)
-      .attr('markerWidth', 50)
-      .attr('markerHeight', 15)
-      .attr('markerUnits', 'px')
-      .attr('orient', 'auto')
-      .append('svg:path')
-      .attr('d', 'M0,-5L10,0L0,5');
+      // build the arrow.
+      svg
+          .append('svg:defs')
+          .selectAll('marker')
+          .data(['end']) // Different link/path types can be defined here
+          .enter()
+          .append('svg:marker') // This section adds in the arrows
+          .attr('id', String)
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', 50)
+          .attr('refY', 0)
+          .attr('markerWidth', 50)
+          .attr('markerHeight', 15)
+          .attr('markerUnits', 'px')
+          .attr('orient', 'auto')
+          .append('svg:path')
+          .attr('d', 'M0,-5L10,0L0,5');
 
     //draw lines for the links
     let link = containingG

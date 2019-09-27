@@ -142,7 +142,7 @@ const GivethDonators = ({ donationData }) => {
       .strength(-200)
       .distanceMax(200);
 
-    let collisionForce = d3.forceCollide(50);
+    let collisionForce = d3.forceCollide(200);
 
     simulation
       .force('center_force', d3.forceCenter(width / 2, height / 2))

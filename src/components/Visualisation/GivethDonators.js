@@ -169,7 +169,7 @@ const GivethDonators = ({ donationData }) => {
       .attr('refY', 0)
       .attr('markerWidth', 50)
       .attr('markerHeight', 15)
-      .attr('markerUnits', 'px')
+      .attr('markerUnits', 'strokeWidth')
       .attr('orient', 'auto')
       .append('svg:path')
       .attr('d', 'M0,-5L10,0L0,5');

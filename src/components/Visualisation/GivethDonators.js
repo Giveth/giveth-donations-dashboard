@@ -121,7 +121,7 @@ const GivethDonators = ({ donationData }) => {
       .call(zoomHandler)
       .call(
         zoomHandler.transform,
-        d3.zoomIdentity.translate(800, 400).scale(0.15, 0.15)
+        d3.zoomIdentity.translate(width / 2, height / 2).scale(0.15, 0.15)
       )
       .selectAll('marker')
       .data(['end']) // Different link/path types can be defined here
